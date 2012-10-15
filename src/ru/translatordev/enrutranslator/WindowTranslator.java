@@ -1,8 +1,10 @@
 package ru.translatordev.enrutranslator;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.TextView;
 
 public class WindowTranslator extends Activity {
@@ -27,7 +29,9 @@ public class WindowTranslator extends Activity {
 			outputWord.setText(translatedText);
 	    }
     }
-		
+	public void OnClBack(View v) {
+		super.onBackPressed();
+	}
 	@Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
