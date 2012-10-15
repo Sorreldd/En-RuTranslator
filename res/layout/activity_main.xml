@@ -1,0 +1,48 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" >
+
+    <Button
+        android:id="@+id/ButTranslate"
+        android:layout_width="256dp"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        android:onClick="OnClTranslate"
+        android:text="Перевести" />
+
+    <EditText
+        android:id="@+id/InField"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/ButTranslate"
+        android:layout_alignLeft="@+id/ButTranslate"
+        android:layout_alignRight="@+id/ButTranslate"
+        android:layout_marginBottom="22dp"
+        android:ems="10" >
+
+        <requestFocus />
+    </EditText>
+
+    <TextView
+        android:id="@+id/TextView2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/InField"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="17dp"
+        android:text="C языка: английского   На: русский"
+        android:textSize="14dp" />
+
+    <TextView
+        android:id="@+id/TextView1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/TextView2"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="14dp"
+        android:text="Введите слово для перевода"
+        android:textSize="15dp" />
+
+</RelativeLayout>
