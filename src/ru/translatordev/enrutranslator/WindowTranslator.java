@@ -19,15 +19,16 @@ import android.widget.TextView;
 
 public class WindowTranslator extends Activity {
     String inStr = "";
-    TextView outputWord;
+    String [] ans = new String[10];
+    TextView outputWord, txRes;
     ProgressDialog pr;
     ImageView imgView;
-    String [] ans = new String[10];
+    Drawable pic;
+    int k = 0, ind = 0;
+    boolean flag = true;
     class TranslateWord extends AsyncTask<Void, Void, Void> {
-		String translatedText = "Слово не существует", webContentFull = "";
+		String translatedText = "Bad gateway", webContentFull = "";
 		StringBuilder websiteContent = new StringBuilder();
-		int k = 0;
-		Drawable[] pic = new Drawable[10];
 		
 		@Override
 	    protected void onPreExecute() {
@@ -38,16 +39,16 @@ public class WindowTranslator extends Activity {
 		
 		@Override
 	    protected Void doInBackground(Void... params) {
-			/*Translate.setClientId("56e53588-ecbe-44e6-9205-d1857d8d0b96");
+			Translate.setClientId("56e53588-ecbe-44e6-9205-d1857d8d0b96");
 	        Translate.setClientSecret("C40nsYBg5BhoeyMCZHEenqGN3UzlKTiSEgBregaXp6g=");
 			try {
 				translatedText = Translate.execute(inStr, Language.ENGLISH, Language.RUSSIAN);
-			} catch (Exception e) { e.printStackTrace(); } */
+			} catch (Exception e) { e.printStackTrace(); } 
 			BingSearch();
 			ParseText();
 			if(k != 0) {
 				try {
-					pic[0] = Drawable.createFromStream((InputStream) new URL(ans[0]).getContent(), "src");
+					pic = Drawable.createFromStream((InputStream) new URL(ans[ind]).getContent(), "src");
 				} catch (Exception e) { e.printStackTrace(); }
 			}
 			return null;
@@ -69,7 +70,7 @@ public class WindowTranslator extends Activity {
 			try {
 				URL urlWeb = new URL(u1 + inStr + u2);
 				connection = urlWeb.openConnection();
-				connection.setRequestProperty ("User-Agent", "Chrome/22.0.1229.94");
+				connection.setRequestProperty ("User-Agent", "Mozilla/5.0");
 				connection.connect();
 				bufferReader = new BufferedReader(new InputStreamReader(connection.getInputStream(), "UTF-8"));
 				String inputLine = "";
@@ -116,6 +117,9 @@ public class WindowTranslator extends Activity {
 				}
 				for(int t = i; t >= 0; t--) {
 					flaghttp = true;
+					if(webContentFull.charAt(t) == '&' || 
+						(webContentFull.charAt(t) == ':' && webContentFull.charAt(t + 1) != '/'))
+							break;
 					for(int j = 0; j < 7; j++) {
 						if(webContentFull.charAt(t + j) != maskhttp.charAt(j)) {
 							flaghttp = false; 
@@ -139,21 +143,68 @@ public class WindowTranslator extends Activity {
 			super.onPostExecute(result);
 			pr.dismiss();
 			outputWord.setText(translatedText);
-			imgView.setImageDrawable(pic[0]);
+			if(k != 0) {
+				txRes.setText(Integer.toString(ind + 1) + " of " + Integer.toString(k));
+				imgView.setImageDrawable(pic);
+			}
 	    }
 		
     }
-	public void OnClBack(View v) {
+	
+    class LoadImage extends AsyncTask<Void, Void, Void> {
+    	@Override
+	    protected void onPreExecute() {
+	    	super.onPreExecute();
+	    	pr = ProgressDialog.show(WindowTranslator.this, "In progress", "Loading");
+	    }
+    	@Override
+    	protected Void doInBackground(Void... params) {
+			if(k != 0) {
+				if(flag == true) {
+					ind = (ind + 1) % k;
+				} else {
+					ind--;
+					if(ind < 0) ind = k - 1;
+				}
+				try {
+					pic = Drawable.createFromStream((InputStream) new URL(ans[ind]).getContent(), "src");
+				} catch (Exception e) { e.printStackTrace(); }
+			}
+			return null;
+	    }
+    	@Override
+	    protected void onPostExecute(Void result) {
+			super.onPostExecute(result);
+			pr.dismiss();
+			if(k != 0) {
+				txRes.setText(Integer.toString(ind + 1) + " of " + Integer.toString(k));
+				imgView.setImageDrawable(pic);
+			}
+	    }
+    }
+    
+    public void OnClBack(View v) {
 		super.onBackPressed();
 	}
+	
+    public void OnClNext(View v) {
+    	flag = true;
+    	LoadImage mt = new LoadImage();
+    	mt.execute();
+    }
+    public void OnClPrevious(View v) {
+    	flag = false;
+    	LoadImage mt = new LoadImage();
+    	mt.execute();
+    }
 	@Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.new_window);
         inStr = getIntent().getExtras().getString("input");
         outputWord = (TextView) findViewById(R.id.TranslatedWord);
+        txRes = (TextView) findViewById(R.id.textRes);
         imgView = (ImageView) findViewById(R.id.imageView1);
-        imgView.setMaxWidth(256);
         TranslateWord urlTh = new TranslateWord();
 		urlTh.execute();
     }
