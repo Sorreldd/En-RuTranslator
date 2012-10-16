@@ -7,6 +7,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.Toast;
 import android.support.v4.app.NavUtils;
 import android.content.Intent;
@@ -20,7 +21,7 @@ public class MainActivity extends Activity {
     	if(len == 0) flag = true;
     	for(int i = 0; i < len; i++) {
     		char c = s.charAt(i);
-    		if((c > 'z' || c < 'a') && (c > 'Z' || c < 'A')) {
+    		if((c > 'z' || c < 'a') && (c > 'Z' || c < 'A') && c != ' ') {
     			flag = true;
     		}
     	}
