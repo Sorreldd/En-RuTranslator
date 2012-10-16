@@ -20,8 +20,8 @@ public final class R {
         public static final int ic_launcher=0x7f020001;
     }
     public static final class id {
-        public static final int ButTranslate=0x7f080000;
-        public static final int InField=0x7f080001;
+        public static final int ButTranslate=0x7f080001;
+        public static final int InField=0x7f080000;
         public static final int NextImage=0x7f080009;
         public static final int PreviousImage=0x7f080006;
         public static final int TextView1=0x7f080003;
